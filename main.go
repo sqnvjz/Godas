@@ -14,4 +14,5 @@ func main() {
 	}
 	df1.ItoDF(a)
 	fmt.Println(df1)
+	fmt.Println(df1.Shape())
 }
