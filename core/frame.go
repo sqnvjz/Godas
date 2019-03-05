@@ -185,3 +185,43 @@ func (df *DataFrame) Transpose() error {
 	}
 	return nil
 }
+
+func (df *DataFrame) Cut(rows []int, cols []int) error {
+	switch df.Dtype {
+	case "int":
+		var cut [][]int
+		arr := df.Data.([][]int)
+		for i := 0; i < len(arr); i++ {
+			var m []int
+			for j := 0; j < len(arr[0]); j++ {
+				if utils.InArray(i, rows) && utils.InArray(j, cols) {
+					m = append(m, arr[i][j])
+				}
+			}
+			if len(m) > 0 {
+				cut = append(cut, m)
+			}
+		}
+		df.Data = cut
+		df.Index = len(rows)
+		df.Columns = len(cols)
+	case "string":
+		var cut [][]string
+		arr := df.Data.([][]string)
+		for i := 0; i < len(arr); i++ {
+			var m []string
+			for j := 0; j < len(arr[0]); j++ {
+				if utils.InArray(i, rows) && utils.InArray(j, cols) {
+					m = append(m, arr[i][j])
+				}
+			}
+			if len(m) > 0 {
+				cut = append(cut, m)
+			}
+		}
+		df.Data = cut
+		df.Index = len(rows)
+		df.Columns = len(cols)
+	}
+	return nil
+}
