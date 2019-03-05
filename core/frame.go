@@ -1,6 +1,9 @@
 package core
 
-import "errors"
+import (
+	"errors"
+	"Godas/utils"
+)
 
 type DataFrame struct {
 	Data    interface{}
@@ -59,17 +62,96 @@ func (df *DataFrame) Shape() *Shape {
 	return &s
 }
 
-func (df *DataFrame) Concat(comp *DataFrame) error {
+func (df *DataFrame) Concat(comp DataFrame) error {
 	if df.Dtype != comp.Dtype {
 		return errors.New("Incompatible Dtype.")
 	}
+
 	switch df.Dtype {
 	case "int":
+		a := df.Data.([][]int)
+		b := comp.Data.([][]int)
 		var target [][]int
+		newrow := utils.Max(len(a), len(b))
+		newcol := len(a[0]) + len(b[0])
+		minrow := utils.Min(len(a), len(b))
+		for i := 0; i < newrow; i++ {
+			var m []int
+			if i < minrow {
+				for j := 0; j < newcol; j++ {
+					if j < len(a) {
+						m = append(m, a[i][j])
+					} else {
+						m = append(m, b[i][j-len(a)])
+					}
+				}
+			} else {
+				if len(a) == minrow {
+					for j := 0; j < newcol; j++ {
+						if j < len(a) {
+							m = append(m, 0)
+						} else {
+							m = append(m, b[i][j-len(a)])
+						}
+					}
+				} else {
+					for j := 0; j < newcol; j++ {
+						if j < len(a) {
+							m = append(m, a[i][j])
+						} else {
+							m = append(m, 0)
+						}
+					}
+				}
+			}
+
+			target = append(target, m)
+		}
 		df.Data = target
+		df.Index = newrow
+		df.Columns = newcol
 	case "string":
-		var target [][]int
+		a := df.Data.([][]string)
+		b := comp.Data.([][]string)
+		var target [][]string
+		newrow := utils.Max(len(a), len(b))
+		newcol := len(a[0]) + len(b[0])
+		minrow := utils.Min(len(a), len(b))
+		for i := 0; i < newrow; i++ {
+			var m []string
+			if i < minrow {
+				for j := 0; j < newcol; j++ {
+					if j < len(a) {
+						m = append(m, a[i][j])
+					} else {
+						m = append(m, b[i][j-len(a)])
+					}
+				}
+			} else {
+				if len(a) == minrow {
+					for j := 0; j < newcol; j++ {
+						if j < len(a) {
+							m = append(m, "")
+						} else {
+							m = append(m, b[i][j-len(a)])
+						}
+					}
+				} else {
+					for j := 0; j < newcol; j++ {
+						if j < len(a) {
+							m = append(m, a[i][j])
+						} else {
+							m = append(m, "")
+						}
+					}
+				}
+			}
+
+			target = append(target, m)
+		}
 		df.Data = target
+		df.Index = newrow
+		df.Columns = newcol
 	}
 	return nil
 }
