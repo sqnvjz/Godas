@@ -6,10 +6,38 @@ import (
 )
 
 type DataFrame struct {
-	Data    interface{}
-	Index   int
-	Columns int
-	Dtype   string
+	Data      interface{}
+	Length    int
+	Width     int
+	Dtype     string
+	Indices   []string
+	Columns   []string
+	IndexMap  map[string]int
+	ColumnMap map[string]int
+}
+
+func NewDataFrame() *DataFrame {
+	return &DataFrame{}
+}
+
+func (df *DataFrame) InitIndices(index []string) error {
+	df.Indices = index
+	m := make(map[string]int)
+	for i, s := range index {
+		m[s] = i
+	}
+	df.IndexMap = m
+	return nil
+}
+
+func (df *DataFrame) InitColumns(column []string) error {
+	df.Columns = column
+	m := make(map[string]int)
+	for i, s := range column {
+		m[s] = i
+	}
+	df.ColumnMap = m
+	return nil
 }
 
 func (df *DataFrame) ItoDF(arr [][]int) error {
@@ -25,8 +53,8 @@ func (df *DataFrame) ItoDF(arr [][]int) error {
 			}
 		}
 	}
-	df.Index = rows
-	df.Columns = cols
+	df.Length = rows
+	df.Width = cols
 	df.Dtype = "int"
 	return nil
 }
@@ -44,8 +72,8 @@ func (df *DataFrame) StoDF(arr [][]string) error {
 			}
 		}
 	}
-	df.Index = rows
-	df.Columns = cols
+	df.Length = rows
+	df.Width = cols
 	df.Dtype = "string"
 	return nil
 }
@@ -57,8 +85,8 @@ type Shape struct {
 
 func (df *DataFrame) Shape() *Shape {
 	var s Shape
-	s.Length = df.Index
-	s.Width = df.Columns
+	s.Length = df.Length
+	s.Width = df.Width
 	return &s
 }
 
@@ -108,8 +136,8 @@ func (df *DataFrame) Concat(comp DataFrame) error {
 			target = append(target, m)
 		}
 		df.Data = target
-		df.Index = newrow
-		df.Columns = newcol
+		df.Length = newrow
+		df.Width = newcol
 	case "string":
 		a := df.Data.([][]string)
 		b := comp.Data.([][]string)
@@ -150,8 +178,8 @@ func (df *DataFrame) Concat(comp DataFrame) error {
 			target = append(target, m)
 		}
 		df.Data = target
-		df.Index = newrow
-		df.Columns = newcol
+		df.Length = newrow
+		df.Width = newcol
 	}
 	return nil
 }
@@ -203,8 +231,8 @@ func (df *DataFrame) Cut(rows []int, cols []int) error {
 			}
 		}
 		df.Data = cut
-		df.Index = len(rows)
-		df.Columns = len(cols)
+		df.Length = len(rows)
+		df.Width = len(cols)
 	case "string":
 		var cut [][]string
 		arr := df.Data.([][]string)
@@ -220,8 +248,8 @@ func (df *DataFrame) Cut(rows []int, cols []int) error {
 			}
 		}
 		df.Data = cut
-		df.Index = len(rows)
-		df.Columns = len(cols)
+		df.Length = len(rows)
+		df.Width = len(cols)
 	}
 	return nil
 }
