@@ -155,3 +155,33 @@ func (df *DataFrame) Concat(comp DataFrame) error {
 	}
 	return nil
 }
+
+func (df *DataFrame) Transpose() error {
+	switch df.Dtype {
+	case "int":
+		arr := df.Data.([][]int)
+		for i := 0; i < len(arr); i++ {
+			for j := i; j < len(arr[i]); j++ {
+				if i != j {
+					temp := arr[i][j]
+					arr[i][j] = arr[j][i]
+					arr[j][i] = temp
+				}
+			}
+		}
+		df.Data = arr
+	case "string":
+		arr := df.Data.([][]string)
+		for i := 0; i < len(arr); i++ {
+			for j := i; j < len(arr[i]); j++ {
+				if i != j {
+					temp := arr[i][j]
+					arr[i][j] = arr[j][i]
+					arr[j][i] = temp
+				}
+			}
+		}
+		df.Data = arr
+	}
+	return nil
+}

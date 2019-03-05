@@ -20,8 +20,8 @@ func main() {
 	df1 := core.DataFrame{}
 	a := [][]string{
 		{"a", "b", "c"},
-		{"a", "b", "c"},
-		{"a", "b", "c"},
+		{"e", "f", "g"},
+		{"h", "i", "j"},
 	}
 	df2 := core.DataFrame{}
 	b := [][]string{
@@ -33,8 +33,11 @@ func main() {
 	df1.StoDF(a)
 	df2.StoDF(b)
 	fmt.Println(df1)
-	fmt.Println(df1.Shape())
-	df1.Concat(df2)
+	df1.Transpose()
 	fmt.Println(df1)
-	fmt.Println()
+
+	//fmt.Println(df1.Shape())
+	//df1.Concat(df2)
+	//fmt.Println(df1)
+	//fmt.Println()
 }
