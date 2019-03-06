@@ -1,47 +1,32 @@
 package main
 
 import (
-	"Godas/core"
+	"GoDas/core"
 	"fmt"
 )
 
 func main() {
-	//df1 := core.DataFrame{}
-	//a := [][]int{
-	//	{1, 2, 3},
-	//	{1, 2, 3},
-	//	{1, 2, 3},
-	//}
-	//df2 := core.DataFrame{}
-	//b := [][]int{
-	//	{1, 2},
-	//	{1, 2},
-	//}
-	df1 := core.NewDataFrame()
-	a := [][]string{
-		{"a", "b", "c", "1"},
-		{"e", "f", "g", "2"},
-		{"h", "i", "j", "3"},
-		{"k", "l", "m", "4"},
+	gp1 := core.NewGoPipe()
+	t := []int{1, 2, 3, 4, 5}
+	a := make([]interface{}, len(t))
+	for i, v := range t {
+		a[i] = v
 	}
-	df2 := core.NewDataFrame()
-	b := [][]string{
-		{"d", "e"},
-		{"d", "e"},
-	}
-	//df1.ItoDF(a)
-	//df2.ItoDF(b)
-	df1.StoDF(a)
-	df2.StoDF(b)
-	fmt.Println(df1)
-	//df1.Cut([]int{1, 3}, []int{1, 3})
-	//df1.Transpose()
-	df1.InitIndices([]string{"a","b"})
-	df1.InitColumns([]string{"1","2","3"})
-	fmt.Println(df1)
+	gp1.Init(a)
+	fmt.Println(gp1)
 
-	//fmt.Println(df1.Shape())
-	//df1.Concat(df2)
-	//fmt.Println(df1)
-	//fmt.Println()
+	gp2 := core.NewGoPipe()
+	f := []string{"a", "b", "c", "d", "ef"}
+	a = make([]interface{}, len(f))
+	for i, v := range f {
+		a[i] = v
+	}
+	gp2.Init(a)
+	fmt.Println(gp2)
+
+	df := core.NewGoFrame()
+	df.Add(*gp1)
+	df.Add(*gp2)
+	fmt.Println(df)
+
 }
