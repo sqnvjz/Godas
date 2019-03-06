@@ -13,10 +13,14 @@ type GoPipe struct {
 }
 
 type GoFrame struct {
-	Data    []GoPipe
-	TypeMap map[int]string
-	Length  int
-	Width   int
+	Data      []GoPipe
+	TypeMap   map[int]string
+	Length    int
+	Width     int
+	Indices   []string
+	Columns   []string
+	IndexMap  map[string]int
+	ColumnMap map[string]int
 }
 
 func NewGoPipe() *GoPipe {
@@ -35,6 +39,28 @@ func (gf *GoFrame) Add(gp GoPipe) error {
 	gf.Data = append(gf.Data, gp)
 	gf.Length = utils.Max(gf.Length, len(gp.Data))
 	gf.Width++
+	return nil
+}
+
+func (gf *GoFrame) AttachColumns(arr []string) error {
+	gf.Columns = arr
+	if gf.ColumnMap == nil {
+		gf.ColumnMap = make(map[string]int)
+	}
+	for i := 0; i < gf.Width; i++ {
+		gf.ColumnMap[arr[i]] = i
+	}
+	return nil
+}
+
+func (gf *GoFrame) AttachIndices(arr []string) error {
+	gf.Indices = arr
+	if gf.IndexMap == nil {
+		gf.IndexMap = make(map[string]int)
+	}
+	for i := 0; i < gf.Length; i++ {
+		gf.IndexMap[arr[i]] = i
+	}
 	return nil
 }
 

@@ -37,6 +37,8 @@ func main() {
 	df.Add(*gp1)
 	df.Add(*gp2)
 	df.Add(*gp3)
+	df.AttachColumns([]string{"cols1", "cols2", "cols3"})
+	df.AttachIndices([]string{"index1", "index2", "index3", "index4", "index5", "index6"})
 	df.V()
 	fmt.Println(df)
 
