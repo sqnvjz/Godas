@@ -7,26 +7,37 @@ import (
 
 func main() {
 	gp1 := core.NewGoPipe()
-	t := []int{1, 2, 3, 4, 5}
-	a := make([]interface{}, len(t))
-	for i, v := range t {
+	t1 := []int{1, 2, 3, 4, 5}
+	a := make([]interface{}, len(t1))
+	for i, v := range t1 {
 		a[i] = v
 	}
 	gp1.Init(a)
 	fmt.Println(gp1)
 
 	gp2 := core.NewGoPipe()
-	f := []string{"a", "b", "c", "d", "ef"}
-	a = make([]interface{}, len(f))
-	for i, v := range f {
+	t2 := []string{"a", "b", "c", "d", "e", "f"}
+	a = make([]interface{}, len(t2))
+	for i, v := range t2 {
 		a[i] = v
 	}
 	gp2.Init(a)
 	fmt.Println(gp2)
 
+	gp3 := core.NewGoPipe()
+	t3 := []bool{true, false, false, true}
+	a = make([]interface{}, len(t3))
+	for i, v := range t3 {
+		a[i] = v
+	}
+	gp3.Init(a)
+	fmt.Println(gp3)
+
 	df := core.NewGoFrame()
 	df.Add(*gp1)
 	df.Add(*gp2)
+	df.Add(*gp3)
+	df.V()
 	fmt.Println(df)
 
 }

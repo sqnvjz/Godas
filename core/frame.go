@@ -1,6 +1,11 @@
 package core
 
-import "reflect"
+import (
+	"GoDas/utils"
+	"fmt"
+	"reflect"
+	"strconv"
+)
 
 type GoPipe struct {
 	Data  []interface{}
@@ -10,6 +15,8 @@ type GoPipe struct {
 type GoFrame struct {
 	Data    []GoPipe
 	TypeMap map[int]string
+	Length  int
+	Width   int
 }
 
 func NewGoPipe() *GoPipe {
@@ -26,6 +33,48 @@ func (gf *GoFrame) Add(gp GoPipe) error {
 	}
 	gf.TypeMap[len(gf.Data)] = gp.GType
 	gf.Data = append(gf.Data, gp)
+	gf.Length = utils.Max(gf.Length, len(gp.Data))
+	gf.Width++
+	return nil
+}
+
+func (gf *GoFrame) V() error {
+	var arr [][]string
+	for i := 0; i < gf.Length; i++ {
+		m := make([]string, 0)
+		for j := 0; j < gf.Width; j++ {
+			m = append(m, "Nil")
+		}
+		arr = append(arr, m)
+	}
+
+	j := 0
+	for _, gp := range gf.Data {
+		i := 0
+		for _, item := range gp.Data {
+			switch gp.GType {
+			case "int":
+				arr[i][j] = strconv.Itoa(item.(int))
+			case "string":
+				arr[i][j] = item.(string)
+			case "bool":
+				if item == true {
+					arr[i][j] = "true"
+				} else {
+					arr[i][j] = "false"
+				}
+			}
+			i++
+		}
+		j++
+	}
+
+	for i := 0; i < gf.Length; i++ {
+		for j := 0; j < gf.Width; j++ {
+			fmt.Printf("%s\t\t", arr[i][j])
+		}
+		fmt.Println()
+	}
 	return nil
 }
 
